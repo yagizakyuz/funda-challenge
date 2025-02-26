@@ -97,6 +97,12 @@ coverage/
 !.vscode/launch.json
 !.vscode/extensions.json
 
+# JetBrains Rider specific
+.idea/
+*.sln.iml
+.idea_modules/
+*.csproj.DotSettings
+
 # OS specific
 # macOS
 .DS_Store
@@ -116,6 +122,15 @@ ehthumbs.db
 .env.development.local
 .env.test.local
 .env.production.local
+*.env.json
+
+# Secrets
+**/*.secret.*
+**/secrets.json
+**/appsecrets.json
+**/*secret*.json
+**/*secrets*.json
+secrets/
 
 # Logs
 logs
@@ -124,9 +139,41 @@ logs
 # Testing
 TestResults/
 [Tt]est[Rr]esult*/
+*.trx
+*.coverage
+
+# Docker
+.docker/
+.dockerignore
+docker-compose.override.yml
+
+# Database
+*.mdf
+*.ldf
+*.ndf
+*.bak
+*.db
+*.sqlite
+*.sqlite3
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+pythonenv*/
+.pytest_cache/
+.coverage
 
 # Temporary files
 .tmp/
 temp/
 tmp/
+**/wwwroot/dist/
+/[Aa]rtifacts/
 
