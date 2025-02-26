@@ -2,80 +2,74 @@ import { Agent } from "./types";
 
 const API_BASE_URL = 'http://localhost:5185/api';
 
-// ?type=koop&pagesize=25
-
-export const fetchAgents = async (
-  location: string = 'amsterdam',
-  propertyType: string = 'koop',
-  withGarden: boolean = false
-): Promise<Agent[]> => {
-  const params = new URLSearchParams({
-    location,
-    propertyType,
-    withGarden: withGarden.toString()
-  });
-
-  const response = await fetch(`${API_BASE_URL}/agents/garden?${params}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch agents');
-  }
-  return response.json();
-};
-
 export type ProgressCallback = (progress: number) => void;
 
-interface StreamResponse {
-  type: 'progress' | 'data';
-  payload: number | Agent[];
+interface StreamResponse<T> {
+  Type: 'Progress' | 'Data' | 'Error';
+  Payload: T;
+}
+
+type StreamPayload = number | Agent[] | string;
+
+interface AmenityFilters {
+  balkon: boolean;
+  dakterras: boolean;
+  tuin: boolean;
 }
 
 export const streamAgents = (
   onProgress: ProgressCallback,
-  location: string = 'amsterdam',
+  location: string = 'utrecht',
   propertyType: string = 'koop',
-  withGarden: boolean = false
+  amenities: AmenityFilters
 ): Promise<Agent[]> => {
   return new Promise((resolve, reject) => {
+
     const params = new URLSearchParams({
       location,
       propertyType,
-      withGarden: withGarden.toString()
+      balkon: amenities.balkon.toString(),
+      dakterras: amenities.dakterras.toString(),
+      tuin: amenities.tuin.toString()
     });
 
     const eventSource = new EventSource(
-      `${API_BASE_URL}/agents/garden/stream?${params}`
+      `${API_BASE_URL}/agent/stream/?${params}`
     );
 
     eventSource.onmessage = (event) => {
-      const data = event.data;
+      // Split by newlines and process each line
+      const lines = event.data.split('\n');
       
-      try {
-        // try to parse all incoming data as json first
-        const parsed = JSON.parse(data) as StreamResponse | Agent[];
+      for (const line of lines) {
+        const trimmedLine = line.trim();
+        
+        try {
+          const response = JSON.parse(trimmedLine) as StreamResponse<StreamPayload>;
 
-        // handle progress updates
-        if (typeof parsed === 'number') {
-          onProgress(parsed);
-          return;
+          switch (response.Type) {
+            case 'Progress':
+              onProgress(response.Payload as number);
+              break;
+            case 'Data':
+              resolve(response.Payload as Agent[]);
+              eventSource.close();
+              break;
+            case 'Error':
+              throw new Error(response.Payload as string);
+            default:
+              console.warn('Unexpected response type:', response.Type);
+          }
+        } catch (e) {
+          console.debug('Failed to parse line:', trimmedLine, e);
+          // Don't reject on individual line parse errors
+          continue;
         }
-
-        // handle final data
-        if (Array.isArray(parsed)) {
-          resolve(parsed);
-          eventSource.close();
-          return;
-        }
-
-        throw new Error('Invalid data format received');
-      } catch (e) {
-        console.error('Failed to parse stream data:', e);
-        reject(new Error(`Stream parsing error: ${e instanceof Error ? e.message : String(e)}`));
-        eventSource.close();
       }
     };
 
     eventSource.onerror = (error) => {
-      reject(new Error('EventSource connection failed: '+  error));
+      reject(new Error('EventSource connection failed: ' + error));
       eventSource.close();
     };
   });

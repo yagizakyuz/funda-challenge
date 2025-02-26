@@ -1,3 +1,5 @@
+namespace FundaApiBackend.Models;
+
 public class Agent
 {
     public required int ID { get; set; }

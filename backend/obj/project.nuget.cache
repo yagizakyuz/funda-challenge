@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "4/Q5X7ivrWyyq2khYXITBOOVXJg+wRNCNqaKAiNaasgsStC+0obMTUFLzQrlpnslhSzmBnw/oLEtoHbq5W4vdw==",
+  "dgSpecHash": "Q3k1Jl6djjAmJZy3GtvpiuvkdZUxnQL4QlrFJZ9ToHV8+WWPdGKnFDy7GtauJTi4SbIKolZ8GOXFXXVYGvVpIQ==",
   "success": true,
   "projectFilePath": "/Users/yagizakyuz/dev/funda-challenge/backend/backend.csproj",
   "expectedPackageFiles": [
@@ -28,8 +28,7 @@
     "/Users/yagizakyuz/.nuget/packages/microsoft.extensions.options/9.0.2/microsoft.extensions.options.9.0.2.nupkg.sha512",
     "/Users/yagizakyuz/.nuget/packages/microsoft.extensions.options.configurationextensions/9.0.2/microsoft.extensions.options.configurationextensions.9.0.2.nupkg.sha512",
     "/Users/yagizakyuz/.nuget/packages/microsoft.extensions.primitives/9.0.2/microsoft.extensions.primitives.9.0.2.nupkg.sha512",
-    "/Users/yagizakyuz/.nuget/packages/polly/8.5.2/polly.8.5.2.nupkg.sha512",
-    "/Users/yagizakyuz/.nuget/packages/polly.core/8.5.2/polly.core.8.5.2.nupkg.sha512",
+    "/Users/yagizakyuz/.nuget/packages/polly/7.2.4/polly.7.2.4.nupkg.sha512",
     "/Users/yagizakyuz/.nuget/packages/polly.extensions.http/3.0.0/polly.extensions.http.3.0.0.nupkg.sha512",
     "/Users/yagizakyuz/.nuget/packages/sqlitepclraw.bundle_e_sqlite3/2.1.10/sqlitepclraw.bundle_e_sqlite3.2.1.10.nupkg.sha512",
     "/Users/yagizakyuz/.nuget/packages/sqlitepclraw.core/2.1.10/sqlitepclraw.core.2.1.10.nupkg.sha512",

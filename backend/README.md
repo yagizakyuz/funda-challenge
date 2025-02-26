@@ -10,14 +10,4 @@ dotnet add package System.Net.Http.Json
 dotnet run
 ```
 
-fr that's all you need 🚀
-
-
--- error handling
--- loading bar (fix the types)
--- possible parallelization
--- caching
--- tests
--- logging
--- configuration
--- documentation
+that's all you need 🚀

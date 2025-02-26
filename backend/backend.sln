@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -14,6 +14,18 @@ Global
 		{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5ADA2BB6-BD8A-FBBA-631C-E748BB1D8E69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F55F9D18-8BB4-4076-BC7E-5923862F6B13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F55F9D18-8BB4-4076-BC7E-5923862F6B13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F55F9D18-8BB4-4076-BC7E-5923862F6B13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F55F9D18-8BB4-4076-BC7E-5923862F6B13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D08EBBC-6902-45E6-8C11-618771CC773B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D08EBBC-6902-45E6-8C11-618771CC773B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D08EBBC-6902-45E6-8C11-618771CC773B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D08EBBC-6902-45E6-8C11-618771CC773B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F85A079-F466-4455-B407-3A7711288419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F85A079-F466-4455-B407-3A7711288419}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F85A079-F466-4455-B407-3A7711288419}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F85A079-F466-4455-B407-3A7711288419}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

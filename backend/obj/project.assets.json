@@ -456,31 +456,15 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
-      "Polly/8.5.2": {
+      "Polly/7.2.4": {
         "type": "package",
-        "dependencies": {
-          "Polly.Core": "8.5.2"
-        },
         "compile": {
-          "lib/net6.0/Polly.dll": {
+          "lib/netstandard2.0/Polly.dll": {
             "related": ".pdb;.xml"
           }
         },
         "runtime": {
-          "lib/net6.0/Polly.dll": {
-            "related": ".pdb;.xml"
-          }
-        }
-      },
-      "Polly.Core/8.5.2": {
-        "type": "package",
-        "compile": {
-          "lib/net8.0/Polly.Core.dll": {
-            "related": ".pdb;.xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/Polly.Core.dll": {
+          "lib/netstandard2.0/Polly.dll": {
             "related": ".pdb;.xml"
           }
         }
@@ -1375,57 +1359,29 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Polly/8.5.2": {
-      "sha512": "vbXsGgkG86nG+TOwY+SmtrGrRHmHH0DQaxtILx//d3Dz/ocJ8izSNYzdvU2gEtWa/LDD8zJLvD3HdjEkdlvkhg==",
+    "Polly/7.2.4": {
+      "sha512": "bw00Ck5sh6ekduDE3mnCo1ohzuad946uslCDEENu3091+6UKnBuKLo4e+yaNcCzXxOZCXWY2gV4a35+K1d4LDA==",
       "type": "package",
-      "path": "polly/8.5.2",
+      "path": "polly/7.2.4",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lib/net462/Polly.dll",
-        "lib/net462/Polly.pdb",
-        "lib/net462/Polly.xml",
+        "README.md",
+        "lib/net461/Polly.dll",
+        "lib/net461/Polly.pdb",
+        "lib/net461/Polly.xml",
         "lib/net472/Polly.dll",
         "lib/net472/Polly.pdb",
         "lib/net472/Polly.xml",
-        "lib/net6.0/Polly.dll",
-        "lib/net6.0/Polly.pdb",
-        "lib/net6.0/Polly.xml",
+        "lib/netstandard1.1/Polly.dll",
+        "lib/netstandard1.1/Polly.pdb",
+        "lib/netstandard1.1/Polly.xml",
         "lib/netstandard2.0/Polly.dll",
         "lib/netstandard2.0/Polly.pdb",
         "lib/netstandard2.0/Polly.xml",
         "package-icon.png",
-        "package-readme.md",
-        "polly.8.5.2.nupkg.sha512",
+        "polly.7.2.4.nupkg.sha512",
         "polly.nuspec"
-      ]
-    },
-    "Polly.Core/8.5.2": {
-      "sha512": "1MJKdxv4zwDmiWvYvVN24DsrWUfgQ4F83voH8bhbtLMdPuGy8CfTUzsgQhvyrl1a7hrM6f/ydwLVdVUI0xooUw==",
-      "type": "package",
-      "path": "polly.core/8.5.2",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net462/Polly.Core.dll",
-        "lib/net462/Polly.Core.pdb",
-        "lib/net462/Polly.Core.xml",
-        "lib/net472/Polly.Core.dll",
-        "lib/net472/Polly.Core.pdb",
-        "lib/net472/Polly.Core.xml",
-        "lib/net6.0/Polly.Core.dll",
-        "lib/net6.0/Polly.Core.pdb",
-        "lib/net6.0/Polly.Core.xml",
-        "lib/net8.0/Polly.Core.dll",
-        "lib/net8.0/Polly.Core.pdb",
-        "lib/net8.0/Polly.Core.xml",
-        "lib/netstandard2.0/Polly.Core.dll",
-        "lib/netstandard2.0/Polly.Core.pdb",
-        "lib/netstandard2.0/Polly.Core.xml",
-        "package-icon.png",
-        "package-readme.md",
-        "polly.core.8.5.2.nupkg.sha512",
-        "polly.core.nuspec"
       ]
     },
     "Polly.Extensions.Http/3.0.0": {
@@ -1724,8 +1680,7 @@
     "net8.0": [
       "Microsoft.EntityFrameworkCore >= 9.0.2",
       "Microsoft.EntityFrameworkCore.Sqlite >= 9.0.2",
-      "Microsoft.Extensions.Http.Polly >= 9.0.2",
-      "Polly >= 8.5.2"
+      "Microsoft.Extensions.Http.Polly >= 9.0.2"
     ]
   },
   "packageFolders": {
@@ -1781,10 +1736,6 @@
           "Microsoft.Extensions.Http.Polly": {
             "target": "Package",
             "version": "[9.0.2, )"
-          },
-          "Polly": {
-            "target": "Package",
-            "version": "[8.5.2, )"
           }
         },
         "imports": [

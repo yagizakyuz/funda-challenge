@@ -2,17 +2,20 @@ import styled from 'styled-components';
 import { ArrowUpDown } from 'lucide-react';
 
 export const TableContainer = styled.div`
-  margin: 2rem 20rem;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 2rem;
+
 `;
 
 export const Table = styled.table`
-  width: 100%;
+  width: 60%;
   border-collapse: collapse;
   background-color: white;
   font-size: 0.9rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 `;
 
 export const Th = styled.th`

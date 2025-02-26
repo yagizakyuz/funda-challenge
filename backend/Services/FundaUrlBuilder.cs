@@ -1,26 +1,45 @@
-public class FundaUrlBuilder
+using FundaApiBackend.Configuration;
+using Microsoft.Extensions.Options;
+using FundaApiBackend.Models;
+namespace FundaApiBackend.Services
 {
-    private readonly string _apiKey;
-    private const string BaseUrl = "https://partnerapi.funda.nl/feeds/Aanbod.svc/json";
-
-    public FundaUrlBuilder(string apiKey)
+    public interface IFundaUrlBuilder
     {
-        _apiKey = apiKey;
+        string BuildSearchUrl(FundaSearchParameters searchParams, int page = 1);
     }
 
-    public string BuildSearchUrl(string location, string propertyType, bool withGarden, int page = 1, int pageSize = 25)
+    public class FundaUrlBuilder : IFundaUrlBuilder
     {
-        var builder = new UriBuilder($"{BaseUrl}/{_apiKey}/");
-        
-        var query = new List<string>
-        {
-            $"type={Uri.EscapeDataString(propertyType)}",
-            $"zo=/{Uri.EscapeDataString(location)}/{(withGarden ? "tuin/" : "")}",
-            $"page={page}",
-            $"pagesize={pageSize}"
-        };
+        private readonly string _apiKey;
+        private const string BaseUrl = "https://partnerapi.funda.nl/feeds/Aanbod.svc/json";
 
-        builder.Query = string.Join("&", query);
-        return builder.Uri.ToString();
+        public FundaUrlBuilder(IOptions<FundaApiOptions> options)
+        {
+            _apiKey = options.Value.ApiKey ?? throw new ArgumentNullException(nameof(options.Value.ApiKey));
+        }
+
+        public string BuildSearchUrl(FundaSearchParameters searchParams, int page = 1)
+        {
+            var builder = new UriBuilder($"{BaseUrl}/{_apiKey}/");
+            
+            var zoParam = searchParams.Location;
+            
+            if (searchParams.Garden) zoParam += "/tuin";
+            if (searchParams.Balcony) zoParam += "/balkon";
+            if (searchParams.Terrace) zoParam += "/dakterras";
+            
+            var query = new List<string>
+            {
+                $"type={Uri.EscapeDataString(searchParams.PropertyType)}",
+                $"zo=/{Uri.EscapeDataString(zoParam)}"
+            };
+
+            query.Add($"page={page}");
+            query.Add($"pagesize={searchParams.PageSize}");
+
+            builder.Query = string.Join("&", query);
+
+            return builder.ToString();
+        }
     }
 } 

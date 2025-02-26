@@ -1,6 +1,7 @@
-namespace FundaApiBackend;
+namespace FundaApiBackend.Services;
 
 using FundaApiBackend.Models;
+using FundaApiBackend.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -8,61 +9,77 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Concurrent;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
-public class FundaDataFetcher
+public interface IFundaDataFetcher
+{
+    Task<Dictionary<int, Agent>> GetAgentListingCountsAsync(
+        FundaSearchParameters searchParams,
+        IProgress<int>? progress = null);
+}
+
+public class FundaDataFetcher : IFundaDataFetcher
 {
     private readonly HttpClient _client;
-    private readonly FundaUrlBuilder _urlBuilder;
-    private readonly SemaphoreSlim _throttler = new(1);
-    private readonly TimeSpan _apiDelay = TimeSpan.FromSeconds(1);
+    private readonly IFundaUrlBuilder _urlBuilder;
+    private readonly SemaphoreSlim _throttler;
+    private readonly TimeSpan _apiDelay;
+    private readonly int _maxRetries;
+    private readonly TimeSpan _retryDelay;
 
-    public FundaDataFetcher(HttpClient client, IConfiguration configuration)
+    public FundaDataFetcher(
+        HttpClient client,
+        IFundaUrlBuilder urlBuilder,
+        IOptions<FundaApiOptions> options)
     {
         _client = client;
-        var apiKey = configuration["Funda:ApiKey"] ?? throw new ArgumentException("Funda API key not found in configuration");
-        _urlBuilder = new FundaUrlBuilder(apiKey);
+        _urlBuilder = urlBuilder;
+        _throttler = new SemaphoreSlim(options.Value.MaxConcurrentRequests);
+        _apiDelay = TimeSpan.FromSeconds(options.Value.RequestDelaySeconds);
+        _maxRetries = options.Value.MaxRetries;
+        _retryDelay = TimeSpan.FromSeconds(options.Value.RetryDelaySeconds);
     }
 
-    private void UpdateAgentCounts(ConcurrentDictionary<int, Agent> agentCounts, Property property)
+    private void UpdateAgents(ConcurrentDictionary<int, Agent> agentCounts, Property property)
     {
         agentCounts.AddOrUpdate(
             property.AgentId,
-            new Agent { 
-                ID = property.AgentId, 
-                Name = property.AgentName, 
+            new Agent
+            {
+                ID = property.AgentId,
+                Name = property.AgentName,
                 ListingCount = 1,
-                AveragePrice = property.Price ?? 0m
+                AveragePrice = property.Price
             },
-            (_, agent) => new Agent { 
-                ID = property.AgentId, 
-                Name = property.AgentName, 
+            (_, agent) => new Agent
+            {
+                ID = property.AgentId,
+                Name = property.AgentName,
                 ListingCount = agent.ListingCount + 1,
-                AveragePrice = agent.AveragePrice + ((property.Price ?? 0m) - agent.AveragePrice) / (agent.ListingCount + 1)
+                AveragePrice = agent.AveragePrice + ((property.Price - agent.AveragePrice) / (agent.ListingCount + 1))
             }
         );
     }
 
     public async Task<Dictionary<int, Agent>> GetAgentListingCountsAsync(
-        string location = "amsterdam", 
-        string propertyType = "koop", 
-        bool withGarden = false,
+        FundaSearchParameters searchParams,
         IProgress<int>? progress = null)
     {
         var agentCounts = new ConcurrentDictionary<int, Agent>();
-        
+
         // get first page
-        var firstPageUrl = _urlBuilder.BuildSearchUrl(location, propertyType, withGarden);
+        var firstPageUrl = _urlBuilder.BuildSearchUrl(searchParams);
         var initialResponse = await FetchPageAsync(firstPageUrl);
-        if (initialResponse?.Properties == null) return new Dictionary<int, Agent>();
+        if (initialResponse?.Properties == null || initialResponse.Properties.Count == 0) return new Dictionary<int, Agent>();
+
 
         // process first page
         foreach (var property in initialResponse.Properties)
         {
-            UpdateAgentCounts(agentCounts, property);
+            UpdateAgents(agentCounts, property);
         }
 
-        progress?.Report(1); // first page done
+        progress?.Report(1);
 
         var totalPages = initialResponse.Paging.TotalPages;
         var processedPages = 1;
@@ -74,13 +91,13 @@ public class FundaDataFetcher
                 await _throttler.WaitAsync();
                 try
                 {
-                    var url = _urlBuilder.BuildSearchUrl(location, propertyType, withGarden, page);
+                    var url = _urlBuilder.BuildSearchUrl(searchParams, page);
                     var result = await FetchPageAsync(url);
-                    if (result?.Properties?.Any() == true)
+                    if (result?.Properties?.Count > 0)
                     {
                         foreach (var property in result.Properties)
                         {
-                            UpdateAgentCounts(agentCounts, property);
+                            UpdateAgents(agentCounts, property);
                         }
                     }
                     var completed = Interlocked.Increment(ref processedPages);
@@ -94,20 +111,31 @@ public class FundaDataFetcher
             });
 
         await Task.WhenAll(tasks);
-        progress?.Report(100); // ensure we hit 100%
+        progress?.Report(100);
 
         return new Dictionary<int, Agent>(agentCounts);
     }
 
     private async Task<FundaResponse?> FetchPageAsync(string url)
     {
-        var response = await _client.GetAsync(url);
-        if (!response.IsSuccessStatusCode)
+        var retryDelay = _retryDelay;
+
+        for (int attempt = 0; attempt <= _maxRetries; attempt++)
         {
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                var response = await _client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<FundaResponse>(content);
+            }
+            catch (Exception) when (attempt < _maxRetries)
+            {
+                await Task.Delay(retryDelay);
+                retryDelay *= 2; // exponential backoff
+            }
         }
-        
-        var content = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<FundaResponse>(content);
+
+        throw new HttpRequestException($"Failed to fetch data from Funda API after {_maxRetries} attempts");
     }
 }

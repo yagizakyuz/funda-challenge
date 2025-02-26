@@ -54,10 +54,6 @@
             "Microsoft.Extensions.Http.Polly": {
               "target": "Package",
               "version": "[9.0.2, )"
-            },
-            "Polly": {
-              "target": "Package",
-              "version": "[8.5.2, )"
             }
           },
           "imports": [
