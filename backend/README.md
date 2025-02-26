@@ -1,13 +1,15 @@
-# setup
-
-install these packages:
-
-dotnet add package Microsoft.EntityFrameworkCore
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer
-dotnet add package System.Net.Http.Json
-# run it
+# For backend
 ```shell
+cd backend
+dotnet restore
 dotnet run
+```
+
+# For frontend
+```shell
+cd frontend
+npm install
+npm run dev
 ```
 
 that's all you need 🚀
