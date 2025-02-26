@@ -1,8 +1,8 @@
 # .NET Core / C# ignores
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
+bin/
+obj/
+Log/
+Logs/
 .vs/
 *.user
 *.userosscache
@@ -30,6 +30,11 @@ bld/
 msbuild.log
 msbuild.err
 msbuild.wrn
+# Binaries
+*.dll
+*.pdb
+*.exe
+*.bin
 
 # Visual Studio cache files
 *.VC.db
