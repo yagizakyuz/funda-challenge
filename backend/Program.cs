@@ -1,5 +1,4 @@
 using System.Net;
-using Polly;
 using FundaApiBackend.Configuration;
 using FundaApiBackend.Services;
 
