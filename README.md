@@ -4,7 +4,7 @@ A full-stack application that analyzes real estate agent data from Funda across 
 
 ## Features
 
-- Search agents by city with autocomplete
+- Search agents by city
 - Filter properties by amenities (balcony, garden, terrace)
 - Real-time progress updates during data fetching
 - Sortable results table showing agent statistics
